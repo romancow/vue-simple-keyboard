@@ -11,5 +11,12 @@
 	"publishConfig": {
 		"registry": "https://npm.pkg.github.com/"
 	},
-	"scripts": {}
+	"scripts": {},
+	"devDependencies": {
+		"rimraf": "^3.0.0",
+		"typescript": "^3.7.2",
+		"vue": "^2.6.10",
+		"vue-class-component": "^7.1.0",
+		"vue-property-decorator": "^8.3.0"
+	}
 }
