@@ -2,16 +2,26 @@ import 'simple-keyboard/build/css/index.css'
 import Vue from 'vue'
 import SimpleKeyboard from 'simple-keyboard'
 
+declare module 'simple-keyboard' {
+	export default interface SimpleKeyboard {
+		replaceInput(inputs: { [name: string]: string }): void
+	}
+}
+
 namespace ObjUtils {
-	export function map<T, K extends keyof T>(obj: T, mapFn: (val: T[K], key: K, obj: T) => any) {
-		return Object.keys(obj).reduce((mapped, key) => {
-			mapped[key] = mapFn(obj[key], key as K, obj)
+	export function keys<T extends Object, K extends keyof T>(obj: T) {
+		return Object.keys(obj) as K[]
+	}
+
+	export function map<T extends Object, K extends keyof T>(obj: T, mapFn: (val: T[K], key: K, obj: T) => any) {
+		return ObjUtils.keys<T, K>(obj).reduce((mapped, key) => {
+			mapped[key as K] = mapFn(obj[key], key, obj)
 			return mapped
 		}, {} as Record<K, any>)
 	}
 
 	export function filter<T, K extends keyof T>(obj: T, filterFn: (val: T[K], key: K, obj: T) => boolean) {
-		return Object.keys(obj).reduce((filtered, key) => {
+		return ObjUtils.keys<T, K>(obj).reduce((filtered, key) => {
 			const val = obj[key]
 			if (filterFn(val, key as K, obj))
 				filtered[key] = val
@@ -58,7 +68,7 @@ namespace SimpleKeyboardOptions {
 		baseClass: String
 	}
 
-	export const Keys = Object.keys(Map)
+	export const Keys = ObjUtils.keys(Map)
 
 	export const Props = ObjUtils.map(Map, 
 		(val) => ({ type: val, default: null })
@@ -82,9 +92,14 @@ namespace SimpleKeyboardEvents {
 			this.$emit(name, ...args)
 		}
 	)
+
+	export type Keys = keyof typeof Map
 }
 
-const VSimpleKeyboard = Vue.extend({
+const vSimpleKeyboard = Vue.extend({
+	data: {
+		keyboard: <unknown>undefined as SimpleKeyboard
+	},
 	props: {
 		value: { type: String, default: '' },
 		all: { type: Object, default: null },
@@ -92,15 +107,15 @@ const VSimpleKeyboard = Vue.extend({
 	},
 	computed: {
 		options() {
-			const keys = SimpleKeyboardOptions.Keys.filter((key) => this[key] != null)
+			const keys = SimpleKeyboardOptions.Keys.filter(key => this[key] != null)
 			return ObjUtils.select(this, keys)
 		},
-		callbacks() {
+		callbacks(this: Vue) {
 			const map = ObjUtils.filter(SimpleKeyboardEvents.Map, 
 				(event) => !!this.$listeners[event]
 			)
-			const keys = Object.keys(map)
-			return ObjUtils.select(this, keys)
+			const keys = ObjUtils.keys(map)
+			return ObjUtils.select(<any>this, keys)
 		}
 	},
 	methods: {
@@ -108,7 +123,9 @@ const VSimpleKeyboard = Vue.extend({
 		...SimpleKeyboardEvents.Methods
 	},
 	watch: {
-		value(value: string) { this.keyboard.setInput(value) },
+		value(value: string) {
+			this.keyboard.setInput(value)
+		},
 		all: {
 			deep: true,
 			handler(values: { [name: string]: string }) {
@@ -133,11 +150,11 @@ const VSimpleKeyboard = Vue.extend({
 	},
 	mounted() {
 		const { options, callbacks } = this
-		this.keyboard = new SimpleKeyboard(this.$el, { ...options, ...callbacks })
+		this.keyboard = new SimpleKeyboard(this.$el as HTMLDivElement, { ...options as Object, ...callbacks })
 	},
 	destroyed() {
 		this.keyboard.destroy()
 	}
 })
 
-export default VSimpleKeyboard
+export default vSimpleKeyboard
