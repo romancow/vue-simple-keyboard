@@ -62,3 +62,13 @@ typings/
 
 # nvm
 .nvmrc
+
+# Visual Studio Code settings
+.vscode
+
+# built files
+/build
+/dist
+
+# nosync
+.nosync
