@@ -9,7 +9,7 @@
 		"removeComments": true,
 		"moduleResolution": "node",
 		"sourceMap": true,
-		"outDir": "./dist"
+		"outDir": "build"
 	},
-	"files": ["v-simple-keyboard.ts"]
+	"files": ["index.ts"]
 }
