@@ -1,0 +1,59 @@
+name: Draft Release
+
+on:
+  push:
+    tags:
+      - v[0-9]*
+
+jobs:
+
+  create-release-draft:
+    name: Create a release draft and attach assets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v1
+      - name: Use Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install & Build
+        run: npm run release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+      - name: Attach ESM Asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/vue-simple-keyboard.esm.js
+          asset_name: vue-simple-keyboard.esm.js
+          asset_content_type: application/javascript
+      - name: Attach UMD Asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/vue-simple-keyboard.umd.js
+          asset_name: vue-simple-keyboard.umd.js
+          asset_content_type: application/javascript
+      - name: Attach Minified Asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/vue-simple-keyboard.min.js
+          asset_name: vue-simple-keyboard.min.js
+          asset_content_type: application/javascript
