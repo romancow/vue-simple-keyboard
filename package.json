@@ -17,9 +17,9 @@
 	"scripts": {
 		"clean": "rimraf ./build/* ./dist/*",
 		"build": "tsc -p .",
+		"prebundle": "npm run build",
 		"bundle": "rollup -c",
-		"prepare": "npm run build & npm run bundle",
-		"release": "npm ci & npm run bundle"
+		"prepare": "npm run bundle"
 	},
 	"dependencies": {
 		"simple-keyboard": "^2.29.103"
