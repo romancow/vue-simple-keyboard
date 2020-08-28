@@ -7,7 +7,7 @@
 	"unpkg": "dist/vue-simple-keyboard.min.js",
 	"types": "build/index.d.ts",
 	"style": "dist/css/index.css",
-	"files": [],
+	"files": ["build/", "dist/"],
 	"repository": "git://github.com/romancow/vue-simple-keyboard.git",
 	"author": "Sean Wilson",
 	"license": "MIT",
