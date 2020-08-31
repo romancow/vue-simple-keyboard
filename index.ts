@@ -97,9 +97,9 @@ namespace SimpleKeyboardEvents {
 }
 
 const vSimpleKeyboard = Vue.extend({
-	data: {
-		keyboard: <unknown>undefined as SimpleKeyboard
-	},
+	data: function() {
+		return { keyboard: <unknown>undefined }
+	} as (() => { keyboard: SimpleKeyboard }),
 	props: {
 		value: { type: String, default: '' },
 		all: { type: Object, default: null },
