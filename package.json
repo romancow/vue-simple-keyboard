@@ -1,6 +1,6 @@
 {
 	"name": "@romancow/vue-simple-keyboard",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "A virtual keyboard Vue component",
 	"main": "dist/vue-simple-keyboard.umd.js",
 	"module": "build/index.js",
