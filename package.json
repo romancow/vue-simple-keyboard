@@ -1,13 +1,16 @@
 {
 	"name": "@romancow/vue-simple-keyboard",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A virtual keyboard Vue component",
 	"main": "dist/vue-simple-keyboard.umd.js",
 	"module": "build/index.js",
 	"unpkg": "dist/vue-simple-keyboard.min.js",
 	"types": "build/index.d.ts",
 	"style": "dist/css/index.css",
-	"files": ["build/", "dist/"],
+	"files": [
+		"build/",
+		"dist/"
+	],
 	"repository": "git://github.com/romancow/vue-simple-keyboard.git",
 	"author": "Sean Wilson",
 	"license": "MIT",
