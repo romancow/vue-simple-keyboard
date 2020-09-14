@@ -88,8 +88,8 @@ namespace SimpleKeyboardEvents {
 	}
 
 	export const Methods = ObjUtils.map(Map,
-		(val) => function(this: Vue,...args: any[]) {
-			this.$emit(name, ...args)
+		(event) => function(this: Vue,...args: any[]) {
+			this.$emit(event, ...args)
 		}
 	)
 
@@ -111,16 +111,14 @@ const vSimpleKeyboard = Vue.extend({
 			return ObjUtils.select(this, keys)
 		},
 		callbacks(this: Vue) {
-			const map = ObjUtils.filter(SimpleKeyboardEvents.Map, 
-				(event) => !!this.$listeners[event]
+			const listeners = this.$listeners
+			return ObjUtils.map(SimpleKeyboardEvents.Methods, (fn, event) =>
+				listeners[event] ? fn : undefined
 			)
-			const keys = ObjUtils.keys(map)
-			return ObjUtils.select(<any>this, keys)
 		}
 	},
 	methods: {
-		clear() { this.keyboard.clearInput() },
-		...SimpleKeyboardEvents.Methods
+		clear() { this.keyboard.clearInput() }
 	},
 	watch: {
 		value(value: string) {
