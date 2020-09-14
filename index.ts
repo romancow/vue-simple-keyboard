@@ -114,7 +114,7 @@ const vSimpleKeyboard = Vue.extend({
 			const listeners = this.$listeners
 			return ObjUtils.map(SimpleKeyboardEvents.Methods, (fn, name) => {
 				const event = SimpleKeyboardEvents.Map[name]
-				return listeners[event] ? fn : undefined
+				return listeners[event] ? fn.bind(this) : undefined
 			})
 		}
 	},
